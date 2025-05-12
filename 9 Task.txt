@@ -1,0 +1,25 @@
+-- Задача: Подсчитать количество малых подразделений (HasComponent.MiniFormationsCount) по военным округам (FederalSubject.MilitaryDistrict)
+-- Вариант решения:
+SELECT 
+    fs.militaryDistrict AS MilitaryDistrict,
+    SUM(hc.MiniFormationsCount) AS MiniFormationsCount
+FROM 
+    MilitaryFormation AS mf,
+    MilitaryInstallation AS mi,
+    FederalSubject AS fs,
+    HasComponent AS hc,
+    StationedIn AS si
+WHERE 
+    MATCH(mf-(hc)->mi) AND
+    MATCH(mi-(si)->fs)
+GROUP BY 
+    fs.militaryDistrict
+ORDER BY 
+    MiniFormationsCount DESC;
+
+-- Выходные данные:
+-- Западный военный округ		48
+-- Центральный военный округ		42
+-- Южный военный округ			41
+-- Восточный военный округ		32
+-- Северный флот (отдельный округ)	12
